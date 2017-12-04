@@ -1,4 +1,5 @@
-FROM python:alpine
+ARG BASE_IMAGE=alpine
+FROM python:$BASE_IMAGE
 
 # Set up workspace and install mkdocs and dependencies.
 COPY . /data

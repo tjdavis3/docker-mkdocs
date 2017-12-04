@@ -1,0 +1,35 @@
+---
+version: 2
+jobs:
+  alpine:
+    machine: true
+    environment:
+      - IMAGE: "nicksantamaria/mkdocs"
+      - PLATFORM: alpine
+    steps:
+      - checkout
+      - run:
+          name: Build alpine image
+          command: |
+            docker build \
+              --build-arg BASE_IMAGE=alpine \
+              -t "${IMAGE}:${PLATFORM}" \
+              -t "${IMAGE}:latest" \
+              .
+      - run:
+          name: Push alpine image
+          command: |
+            docker login -u $DOCKER_USER -p $DOCKER_PASS
+            docker push "${IMAGE}:latest"
+            docker push "${IMAGE}:${PLATFORM}"
+
+            MKDOCS_VERSION=$(docker run --rm "${IMAGE}:latest" --version | awk '{print $3}')
+            docker tag "${IMAGE}:latest" "${IMAGE}:${MKDOCS_VERSION}"
+            docker tag "${IMAGE}:latest" "${IMAGE}:${MKDOCS_VERSION}-alpine"
+            docker push "${IMAGE}:${MKDOCS_VERSION}"
+            docker push "${IMAGE}:${MKDOCS_VERSION}-alpine"
+workflows:
+  version: 2
+  main:
+    jobs:
+      - alpine
