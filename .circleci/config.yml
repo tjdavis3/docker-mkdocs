@@ -15,7 +15,7 @@ jobs:
           name: Build alpine image
           command: |
             docker build \
-              --build-arg BASE_IMAGE=alpine \
+              --build-arg BASE_IMAGE=${alpine} \
               -t "${IMAGE}:${PLATFORM}" \
               -t "${IMAGE}:latest" \
               .
@@ -28,11 +28,48 @@ jobs:
 
             MKDOCS_VERSION=$(docker run --rm "${IMAGE}:latest" --version | awk '{print $3}')
             docker tag "${IMAGE}:latest" "${IMAGE}:${MKDOCS_VERSION}"
-            docker tag "${IMAGE}:latest" "${IMAGE}:${MKDOCS_VERSION}-alpine"
+            docker tag "${IMAGE}:latest" "${IMAGE}:${MKDOCS_VERSION}-${PLATFORM}"
             docker push "${IMAGE}:${MKDOCS_VERSION}"
-            docker push "${IMAGE}:${MKDOCS_VERSION}-alpine"
+            docker push "${IMAGE}:${MKDOCS_VERSION}-${PLATFORM}"
+  debian:
+    docker:
+      - image: docker:edge-git
+    environment:
+      - IMAGE: "nicksantamaria/mkdocs"
+      - PLATFORM: jessie
+    working_directory: /data
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: Build debian image
+          command: |
+            docker build \
+              --build-arg BASE_IMAGE=${PLATFORM} \
+              -t "${IMAGE}:${PLATFORM}" \
+              .
+      - run:
+          name: Push alpine image
+          command: |
+            docker login -u $DOCKER_USER -p $DOCKER_PASS
+            docker push "${IMAGE}:${PLATFORM}"
+
+            MKDOCS_VERSION=$(docker run --rm "${IMAGE}:${PLATFORM}" --version | awk '{print $3}')
+            docker tag "${IMAGE}:${PLATFORM}" "${IMAGE}:${MKDOCS_VERSION}"
+            docker tag "${IMAGE}:${PLATFORM}" "${IMAGE}:${MKDOCS_VERSION}-${PLATFORM}"
+            docker push "${IMAGE}:${MKDOCS_VERSION}"
+            docker push "${IMAGE}:${MKDOCS_VERSION}-${PLATFORM}"
 workflows:
   version: 2
   main:
     jobs:
-      - alpine
+      - alpine:
+          filters:
+            branches:
+              only:
+                - master
+      - debian:
+          filters:
+            branches:
+              only:
+                - master
