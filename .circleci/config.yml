@@ -15,7 +15,7 @@ jobs:
           name: Build alpine image
           command: |
             docker build \
-              --build-arg BASE_IMAGE=${alpine} \
+              --build-arg BASE_IMAGE=${PLATFORM} \
               -t "${IMAGE}:${PLATFORM}" \
               -t "${IMAGE}:latest" \
               .
