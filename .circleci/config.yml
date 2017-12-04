@@ -49,15 +49,13 @@ jobs:
               -t "${IMAGE}:${PLATFORM}" \
               .
       - run:
-          name: Push alpine image
+          name: Push debian image
           command: |
             docker login -u $DOCKER_USER -p $DOCKER_PASS
             docker push "${IMAGE}:${PLATFORM}"
 
             MKDOCS_VERSION=$(docker run --rm "${IMAGE}:${PLATFORM}" --version | awk '{print $3}')
-            docker tag "${IMAGE}:${PLATFORM}" "${IMAGE}:${MKDOCS_VERSION}"
             docker tag "${IMAGE}:${PLATFORM}" "${IMAGE}:${MKDOCS_VERSION}-${PLATFORM}"
-            docker push "${IMAGE}:${MKDOCS_VERSION}"
             docker push "${IMAGE}:${MKDOCS_VERSION}-${PLATFORM}"
 workflows:
   version: 2
