@@ -2,12 +2,15 @@
 version: 2
 jobs:
   alpine:
-    machine: true
+    docker:
+      - image: debian:jessie
     environment:
       - IMAGE: "nicksantamaria/mkdocs"
       - PLATFORM: alpine
+    working_directory: /data
     steps:
       - checkout
+      - setup_remote_docker
       - run:
           name: Build alpine image
           command: |
