@@ -3,7 +3,7 @@ version: 2
 jobs:
   alpine:
     docker:
-      - image: debian:jessie
+      - image: docker:edge-git
     environment:
       - IMAGE: "nicksantamaria/mkdocs"
       - PLATFORM: alpine
