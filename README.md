@@ -16,6 +16,18 @@ Run `mkdocs build` command.
 docker run --rm -v $(pwd):/data nicksantamaria/mkdocs build
 ```
 
+## Tags
+
+There is a build for both Alpine Linux and Debian Jessie. Images are built weekly (Sunday night UTC), you have these choices for tags.
+
+- `latest` - most recent Alpine image.
+- `alpine` - most recent Alpine image.
+- `jessie` - most recent Debian Jessie image.
+- `[mkdocs-version]-alpine` - Specific version of mkdocs on Alpine.
+- `[mkdocs-version]-jessie` - Specific version of mkdocs on Debian Jessie.
+
+Only the latest version of `mkdocs` is built each week, pinning to an older version stop upstream security patches.
+
 ## Themes
 
 For convenience, the following themes are bundled in the container:
