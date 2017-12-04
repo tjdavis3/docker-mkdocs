@@ -1,6 +1,6 @@
 # mkdocs
 
-Docker container for running `mkdocs` python library.
+Docker container for running `mkdocs` documentation static site generator.
 
 ## Usage
 
