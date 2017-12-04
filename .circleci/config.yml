@@ -61,14 +61,14 @@ jobs:
             docker push "${IMAGE}:${MKDOCS_VERSION}-${PLATFORM}"
 workflows:
   version: 2
-  main:
+  weekly:
     jobs:
-      - alpine:
-          filters:
-            branches:
-              only:
-                - master
-      - debian:
+      - alpine
+      - debian
+    triggers:
+      - schedule:
+          # Scheduled build for 10pm UTC on Sunday.
+          cron: "0 22 * * 0"
           filters:
             branches:
               only:
