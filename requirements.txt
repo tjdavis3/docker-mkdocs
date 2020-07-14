@@ -7,3 +7,5 @@ mkdocs-bootswatch
 mkdocs-bootstrap
 mkdocs-windmill
 mkdocs-windmill-dark
+markdown-include
+mkdocs-monorepo-plugin
